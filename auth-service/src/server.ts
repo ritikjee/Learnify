@@ -16,7 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.all('*', (req: Request, res: Response) => {
-  res.status(404).json({ message: 'Route not found' });
+  res.status(404).json({ message: 'No resource found' });
 });
 
 app.listen(PORT, () => {
