@@ -1,0 +1,9 @@
+{
+  "BACKEND_URL": {
+    "AUTH_SERVICE": "http://localhost:5050",
+    "CORE_SERVICE": "http://localhost:5000"
+  },
+  "FRONTEND_URL": {
+    "APP_URL": "http://localhost:3000"
+  }
+}

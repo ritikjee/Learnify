@@ -11,7 +11,7 @@ model User {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email           String   @unique
   password        String
-  firstname       String
+  firstname       String?
   lastname        String?
   createdAt       DateTime @default(now())
   verified        Boolean  @default(false)  

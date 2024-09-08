@@ -7,7 +7,7 @@ import { generateToken } from '../utils/generate-token';
 export async function register(req: Request, res: Response) {
   const { firstname, lastname, email, password } = req.body;
 
-  if (!firstname || !lastname || !email || !password) {
+  if (!email || !password) {
     return res.status(400).send('Missing required fields');
   }
 
@@ -97,19 +97,20 @@ export async function login(req: Request, res: Response) {
 
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'none'
     });
 
     res.cookie('access_token', access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'none'
     });
 
     return res.status(200).json({
-      message: 'User logged in successfully.',
-      user
+      message: 'User logged in successfully.'
     });
   } catch (error) {
     return res.status(500).json({
