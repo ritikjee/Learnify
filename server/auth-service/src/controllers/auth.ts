@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import { db } from '../utils/db';
 import bcryptjs from 'bcryptjs';
-import { decodeToken, generateToken } from '../utils/generate-token';
+import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
+import { db } from '../utils/db';
+import { generateToken } from '../utils/generate-token';
 
 export async function register(req: Request, res: Response) {
   const { firstname, lastname, email, password } = req.body;
@@ -12,7 +12,7 @@ export async function register(req: Request, res: Response) {
   }
 
   try {
-    const existingUser = await db.authUser.findUnique({
+    const existingUser = await db.user.findUnique({
       where: {
         email: email
       }
@@ -29,7 +29,7 @@ export async function register(req: Request, res: Response) {
     const token = uuid();
     const tokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
 
-    const user = await db.authUser.create({
+    const user = await db.user.create({
       data: {
         firstname,
         lastname,
@@ -41,8 +41,7 @@ export async function register(req: Request, res: Response) {
     });
 
     return res.status(201).json({
-      message: 'User registered successfully.',
-      user
+      message: 'User registered successfully.'
     });
   } catch (error) {
     return res.status(500).json({
@@ -59,7 +58,7 @@ export async function login(req: Request, res: Response) {
   }
 
   try {
-    const user = await db.authUser.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email: email
       }
@@ -78,12 +77,31 @@ export async function login(req: Request, res: Response) {
         message: 'Invalid password.'
       });
     }
-    const token = generateToken({
-      id: user.id,
-      email: user.email
+    const refresh_token = generateToken(
+      {
+        id: user.id,
+        email: user.email
+      },
+      process.env.JWT_SECRET as string,
+      '10d'
+    );
+
+    const access_token = generateToken(
+      {
+        id: user.id,
+        email: user.email
+      },
+      process.env.JWT_SECRET as string,
+      '15m'
+    );
+
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none'
     });
 
-    res.cookie('token', token, {
+    res.cookie('access_token', access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none'
@@ -101,44 +119,28 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function logout(req: Request, res: Response) {
-  res.clearCookie('token');
+  res.clearCookie('refresh_token');
   return res.status(200).json({
     message: 'User logged out successfully.'
   });
 }
 
-export async function verifyToken(req: Request, res: Response) {
-  const token = req.query.token;
-
-  if (!token) {
-    return res.status(401).json({
-      message: 'Unauthorized'
-    });
-  }
-
-  const decoded = decodeToken(token.toString());
-
-  if (!decoded) {
-    return res.status(401).json({
-      message: 'Unauthorized'
-    });
-  }
-
-  const user = await db.authUser.findUnique({
-    where: {
-      id: decoded.id,
-      verified: true
+export async function verifyUser(req: Request, res: Response) {
+  try {
+    const { user } = req;
+    if (!user) {
+      return res.status(401).json({
+        message: 'Unauthorized'
+      });
     }
-  });
-
-  if (!user) {
+    return res.status(200).json({
+      id: user.id,
+      email: user.email,
+      name: `${user.firstname} ${user.lastname}`
+    });
+  } catch (error) {
     return res.status(401).json({
       message: 'Unauthorized'
     });
   }
-
-  return res.status(200).json({
-    id: user.id,
-    email: user.email
-  });
 }

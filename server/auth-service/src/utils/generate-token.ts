@@ -1,8 +1,12 @@
 import jsonwebtoken from 'jsonwebtoken';
 
-export const generateToken = (payload: any) => {
-  return jsonwebtoken.sign(payload, process.env.JWT_SECRET as string, {
-    expiresIn: '20d'
+export const generateToken = (
+  payload: any,
+  secret: string,
+  expiresIn: string
+) => {
+  return jsonwebtoken.sign(payload, secret as string, {
+    expiresIn
   });
 };
 
