@@ -37,7 +37,6 @@ export const fetcher = async (payload: {
     return {
       data: response.data,
       error: null,
-      headers: response.headers,
     };
   } catch (error: any) {
     return {

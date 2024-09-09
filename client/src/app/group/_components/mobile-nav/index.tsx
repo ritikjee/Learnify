@@ -1,0 +1,23 @@
+import { Home, Message } from "@/icons";
+
+import Link from "next/link";
+
+type Props = {
+  groupid: string;
+};
+
+const MobileNav = async ({ groupid }: Props) => {
+  return (
+    <div className="bg-[#1A1A1D] w-screen py-3 px-11 fixed bottom-0 z-50 md:hidden justify-between items-center flex">
+      <Link href={`/group/${groupid}`}>
+        <Home className="h-7 w-7" />
+      </Link>
+      {/* <Notification /> */}
+      <Link href={`/group/${groupid}/messages`}>
+        <Message className="h-7 w-7" />
+      </Link>
+    </div>
+  );
+};
+
+export default MobileNav;

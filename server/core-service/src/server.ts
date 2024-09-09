@@ -4,6 +4,8 @@ import 'dotenv/config';
 import express, { Express, Request, Response } from 'express';
 import userRouter from './routes/user';
 import groupRouter from './routes/group';
+import paymentRouter from './routes/payment';
+import channelRouter from './routes/channel';
 
 const app: Express = express();
 
@@ -24,6 +26,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/user', userRouter);
 app.use('/api/group', groupRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/channel', channelRouter);
 
 app.all('*', (req: Request, res: Response) => {
   res.status(404).json({ message: 'No resource found' });

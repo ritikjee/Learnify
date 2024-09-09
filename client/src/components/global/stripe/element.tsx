@@ -1,9 +1,16 @@
 "use client";
 
-type Props = {
+import { useStripeElements } from "@/hooks/payment";
+import { Elements } from "@stripe/react-stripe-js";
+
+type StripeElementsProps = {
   children: React.ReactNode;
 };
 
-export function StripeElements({ children }: Props) {
-  return <div>{children}</div>;
-}
+export const StripeElements = ({ children }: StripeElementsProps) => {
+  const { StripePromise } = useStripeElements();
+
+  const promise = StripePromise();
+
+  return promise && <Elements stripe={promise}>{children}</Elements>;
+};

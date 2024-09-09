@@ -46,7 +46,6 @@ export async function loggedInUser(req: Request, res: Response) {
       message: 'User could not be logged in! Try again'
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'Internal Server Error'
     });
