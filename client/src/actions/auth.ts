@@ -16,8 +16,12 @@ export const onSignIn = async (payload: {
     data: payload,
   });
 
-  cookieStore.set("access_token", data?.access_token);
-  cookieStore.set("refresh_token", data?.refresh_token);
+  cookieStore.set("access_token", data?.access_token, {
+    maxAge: 1000 * 60 * 60 * 24 * 30,
+  });
+  cookieStore.set("refresh_token", data?.refresh_token, {
+    maxAge: 1000 * 60 * 60 * 24 * 30,
+  });
 
   return { data, error };
 };

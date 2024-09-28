@@ -108,7 +108,8 @@ export async function login(req: Request, res: Response) {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 1000 * 60 * 15
+      // WIP : Chnage it to 15 min
+      maxAge: 1000 * 86400 * 30
     });
 
     return res.status(200).json({

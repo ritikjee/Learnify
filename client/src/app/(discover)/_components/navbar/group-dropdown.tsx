@@ -37,7 +37,9 @@ type GroupDropDownProps = {
 };
 
 export const GroupDropDown = ({ groups, members }: GroupDropDownProps) => {
-  const { groups: userGroups } = groups;
+  const userGroups = groups?.groups;
+
+  if (!userGroups) return <p>Learnify.</p>;
 
   return (
     <DropDown
@@ -65,23 +67,6 @@ export const GroupDropDown = ({ groups, members }: GroupDropDownProps) => {
             >
               <Group />
               {item.name}
-            </Button>
-          </Link>
-        ))}
-      <Separator orientation="horizontal" />
-      {members &&
-        members.length > 0 &&
-        members.map((member) => (
-          <Link
-            key={member.Group?.id}
-            href={`/group/${member.Group?.id}/channel/${member.Group?.channel[0].id}`}
-          >
-            <Button
-              variant="ghost"
-              className="flex gap-2 w-full justify-start hover:bg-themeGray items-center"
-            >
-              <Group />
-              {member.Group?.name}
             </Button>
           </Link>
         ))}

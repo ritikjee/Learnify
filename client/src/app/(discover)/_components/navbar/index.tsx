@@ -18,7 +18,7 @@ export const Navbar = async () => {
     <div className="flex px-5 py-3 items-center bg-themeBlack border-b-[1px] border-themeDarkGray fixed z-50 w-full bg-clip-padding backdrop--blur__safari backdrop-filter backdrop-blur-2xl bg-opacity-60">
       <div className="hidden lg:inline">
         {user ? (
-          <GroupDropDown members={groups.members} groups={groups} />
+          <GroupDropDown members={groups?.members} groups={groups} />
         ) : (
           <p>Learnify.</p>
         )}

@@ -14,7 +14,7 @@ export const JoinButton = ({ owner, groupid }: JoinButtonProps) => {
   const { onJoinFreeGroup } = useJoinFree(groupid);
 
   if (!owner) {
-    if (data?.data === 200) {
+    if (data?.data) {
       return (
         <GlassModal
           trigger={

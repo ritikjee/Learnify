@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { db } from '../utils/db';
+import { v4 } from 'uuid';
 
 export const onGetChannelInfo = async (req: Request, res: Response) => {
-  const { channelid } = req.params;
+  const { channelid } = req.query as { channelid: string };
 
   if (!channelid) {
     return res.status(400).json({ message: 'Channel ID is required' });
@@ -157,7 +158,6 @@ export const onUpdateChannelInfo = async (req: Request, res: Response) => {
         .json({ message: 'Channel not found! try again later' });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -185,5 +185,84 @@ export const onDeleteChannel = async (req: Request, res: Response) => {
     return res.status(500).json({
       message: 'Internal server error'
     });
+  }
+};
+
+export const onCreateChannelPost = async (req: Request, res: Response) => {
+  const { channelid, title, content, htmlContent, jsonContent } = req.body;
+  if (!channelid) {
+    return res.status(400).json({ message: 'Channel ID is required' });
+  }
+
+  try {
+    const user = req.user;
+    const post = await db.post.create({
+      data: {
+        id: v4(),
+        authorId: user.id!,
+        channelId: channelid,
+        title,
+        content,
+        htmlContent,
+        jsonContent
+      }
+    });
+
+    if (post) {
+      return res.status(200).json({ message: 'Post successfully created' });
+    }
+
+    return res.status(404).json({ message: 'Channel not found' });
+  } catch (error) {
+    return res.status(400).json({ message: 'Oops! something went wrong' });
+  }
+};
+
+export const onLikeChannelPost = async (req: Request, res: Response) => {
+  try {
+    const user = req.user;
+
+    const { postid, likeid } = req.body;
+
+    if (!postid) {
+      return res.status(400).json({ message: 'Post ID is required' });
+    }
+
+    if (!likeid) {
+      return res.status(400).json({ message: 'Like ID is required' });
+    }
+
+    const liked = await db.like.findFirst({
+      where: {
+        id: likeid,
+        userId: user.id!
+      }
+    });
+
+    if (liked) {
+      await db.like.delete({
+        where: {
+          id: likeid,
+          userId: user.id
+        }
+      });
+
+      return res.status(200).json({ message: 'You unliked this post' });
+    }
+
+    const like = await db.like.create({
+      data: {
+        id: likeid,
+        postId: postid,
+        userId: user.id!
+      }
+    });
+
+    if (like) return res.status(200).json({ message: 'You liked this post' });
+
+    return res.status(400).json({ message: 'Oops! something went wrong' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

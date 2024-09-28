@@ -155,3 +155,80 @@ export const onGetGroupSubscriptionPaymentIntent = async (
     return res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const onActivateSubscription = async (req: Request, res: Response) => {
+  const { id } = req.query as {
+    id: string;
+  };
+
+  if (!id) {
+    return res.status(400).json({ message: 'Bad request' });
+  }
+
+  try {
+    const status = await db.subscription.findUnique({
+      where: {
+        id
+      },
+      select: {
+        active: true
+      }
+    });
+    if (status) {
+      if (status.active) {
+        return res.status(200).json({ message: 'Subscription already active' });
+      }
+      if (!status.active) {
+        const current = await db.subscription.findFirst({
+          where: {
+            active: true
+          },
+          select: {
+            id: true
+          }
+        });
+        if (current && current.id) {
+          const deactivate = await db.subscription.update({
+            where: {
+              id: current.id
+            },
+            data: {
+              active: false
+            }
+          });
+
+          if (deactivate) {
+            const activateNew = await db.subscription.update({
+              where: {
+                id
+              },
+              data: {
+                active: true
+              }
+            });
+
+            if (activateNew) {
+              return res.status(200).json({ message: 'New plan activated' });
+            }
+          }
+        } else {
+          const activateNew = await db.subscription.update({
+            where: {
+              id
+            },
+            data: {
+              active: true
+            }
+          });
+
+          if (activateNew) {
+            return res.status(200).json({ message: 'New plan activated' });
+          }
+        }
+      }
+    }
+    return res.status(404).json({ message: 'Subscription not found' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+};

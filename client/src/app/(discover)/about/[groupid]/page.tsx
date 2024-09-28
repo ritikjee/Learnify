@@ -31,8 +31,6 @@ const Page = async ({ params }: Props) => {
 
   const { data: userid } = await onAuthenticatedUser();
 
-  console.log(userid);
-
   return (
     <HydrationBoundary state={dehydrate(query)}>
       <div className="pt-36 pb-10 container grid grid-cols-1 lg:grid-cols-3 gap-x-10">

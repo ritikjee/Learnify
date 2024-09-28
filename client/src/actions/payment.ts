@@ -53,3 +53,13 @@ export const onGetGroupSubscriptionPaymentIntent = async (groupid: string) => {
     },
   });
 };
+
+export const onActivateSubscription = async (groupid: string) => {
+  return await fetcher({
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/payment/onActivateSubscription`,
+    method: "GET",
+    params: {
+      groupid,
+    },
+  });
+};

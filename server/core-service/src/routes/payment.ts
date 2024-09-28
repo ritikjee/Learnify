@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  onActivateSubscription,
   onCreateNewGroupSubscription,
   onGetActiveSubscription,
   onGetGroupSubscriptionPaymentIntent,
@@ -21,5 +22,6 @@ paymentRouter.route('/onGetActiveSubscription').get(onGetActiveSubscription);
 paymentRouter
   .route('/onGetGroupSubscriptionPaymentIntent')
   .get(onGetGroupSubscriptionPaymentIntent);
+paymentRouter.route('/onActivateSubscription').get(onActivateSubscription);
 
 export default paymentRouter;

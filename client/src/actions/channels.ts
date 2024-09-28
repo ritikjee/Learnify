@@ -7,7 +7,9 @@ export const onGetChannelInfo = async (channelid: string) => {
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/channel/onGetChannelInfo`,
-    params: channelid,
+    params: {
+      channelid,
+    },
   });
 };
 export const onCreateNewChannel = async (
@@ -52,6 +54,37 @@ export const onDeleteChannel = async (channelId: string) => {
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/channel/onDeleteChannel`,
     params: {
       channelId,
+    },
+  });
+};
+
+export const onCreateChannelPost = async (
+  channelid: string,
+  title: string,
+  content: string,
+  htmlContent: string,
+  jsonContent: string
+) => {
+  return await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/channel/onCreateChannelPost`,
+    data: {
+      channelid,
+      title,
+      content,
+      htmlContent,
+      jsonContent,
+    },
+  });
+};
+
+export const onLikeChannelPost = async (postid: string, likeid: string) => {
+  return await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/channel/onLikeChannelPost`,
+    data: {
+      postid,
+      likeid,
     },
   });
 };

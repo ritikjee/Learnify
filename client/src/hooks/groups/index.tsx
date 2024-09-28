@@ -170,8 +170,6 @@ export const useGroupSettings = (groupid: string) => {
         }
       }
       if (values.icon && values.icon.length > 0) {
-        console.log("icon");
-
         const updated = await onUpDateGroupSettings(
           groupid,
           "ICON",
@@ -427,7 +425,6 @@ export const useGroupAbout = (
           `/about/${groupid}`
         );
 
-        console.log(data, error);
         if (!error) {
           return toast("Error", {
             description: "Oops! looks like your form is empty",

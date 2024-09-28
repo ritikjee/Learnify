@@ -390,7 +390,6 @@ export const onUpDateGroupSettings = async (req: Request, res: Response) => {
           icon: content
         }
       });
-      console.log('uploaded image');
     }
     if (type === 'DESCRIPTION') {
       await db.group.update({
