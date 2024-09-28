@@ -34,34 +34,34 @@ To install and run Learnify locally, follow these steps:
 
 1. Clone the repository:
 
-   \`\`\`bash
+   ```bash
    git clone https://github.com/ritikjee/Learnify.git
-   \`\`\`
+   ```
 
 2. Install dependencies:
 
-   \`\`\`bash
+   ```bash
    cd learnify
    npm install
-   \`\`\`
+   ```
 
 3. Set up environment variables:
 
-   Create a \`.env\` file in the root of the project and add the following variables:
+   Create a `.env` file in the root of the project and add the following variables:
 
-   \`\`\`env
-   STRIPE_SECRET_KEY=your_stripe_secret_key
-   DATABASE_URL=your_database_url
-   JWT_SECRET=your_jwt_secret
-   \`\`\`
+```env
+ STRIPE_SECRET_KEY=your_stripe_secret_key
+ DATABASE_URL=your_database_url
+ JWT_SECRET=your_jwt_secret
+```
 
 4. Run the development server:
 
-   \`\`\`bash
-   npm run dev
-   \`\`\`
+```bash
+ npm run dev
+```
 
-5. Open your browser and go to \`http://localhost:3000\` to access Learnify.
+5. Open your browser and go to `http://localhost:3000` to access Learnify.
 
 ## Usage
 
