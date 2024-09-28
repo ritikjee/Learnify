@@ -83,7 +83,7 @@ export async function login(req: Request, res: Response) {
         email: user.email
       },
       process.env.JWT_SECRET as string,
-      '10d'
+      '30d'
     );
 
     const access_token = generateToken(
@@ -95,22 +95,26 @@ export async function login(req: Request, res: Response) {
       '15m'
     );
 
+    // WIP: SET COOKIES USING EXPRESS
+
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production',
       secure: true,
-      sameSite: 'none'
+      sameSite: 'none',
+      maxAge: 1000 * 86400 * 30
     });
 
     res.cookie('access_token', access_token, {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production',
       secure: true,
-      sameSite: 'none'
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 15
     });
 
     return res.status(200).json({
-      message: 'User logged in successfully.'
+      message: 'User logged in successfully.',
+      refresh_token,
+      access_token
     });
   } catch (error) {
     return res.status(500).json({

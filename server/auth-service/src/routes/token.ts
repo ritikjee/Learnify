@@ -3,4 +3,4 @@ import { accessToken } from '../controllers/token';
 
 export const router = Router();
 
-router.get('/access-token', accessToken);
+router.get('/refresh-token', accessToken);

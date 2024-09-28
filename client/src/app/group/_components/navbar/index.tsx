@@ -2,8 +2,8 @@ import GlassSheet from "@/components/global/glass-sheet";
 import Search from "@/components/global/search";
 import SideBar from "@/components/global/sidebar";
 import { Button } from "@/components/ui/button";
-import { CheckBadge } from "@/icons";
-import { Menu } from "lucide-react";
+import { Settings } from "@/icons";
+import { Menu, Plus } from "lucide-react";
 import Link from "next/link";
 
 type NavbarProps = {
@@ -24,13 +24,20 @@ export const Navbar = async ({ groupid, userid }: NavbarProps) => {
         className="rounded-full border-themeGray bg-black !opacity-100 px-3"
         placeholder="Search..."
       />
+      <Link href={`/group/${groupid}/setting`} className="hidden md:inline">
+        <Button
+          variant="outline"
+          className="bg-themeBlack rounded-2xl flex gap-2 border-themeGray hover:bg-themeGray"
+        >
+          <Settings />
+        </Button>
+      </Link>
       <Link href={`/group/create`} className="hidden md:inline">
         <Button
           variant="outline"
           className="bg-themeBlack rounded-2xl flex gap-2 border-themeGray hover:bg-themeGray"
         >
-          <CheckBadge />
-          Create Group
+          <Plus />
         </Button>
       </Link>
     </div>

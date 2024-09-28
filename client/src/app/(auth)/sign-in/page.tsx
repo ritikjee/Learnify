@@ -1,7 +1,10 @@
+import { onAuthenticatedUser } from "@/actions/auth";
 import SignInForm from "@/components/forms/sign-in";
 import { Separator } from "@/components/ui/separator";
 
-const SignInPage = () => {
+const SignInPage = async () => {
+  const { error } = await onAuthenticatedUser();
+
   return (
     <>
       <h5 className="font-bold text-base mb-5 text-themeTextWhite">Login</h5>

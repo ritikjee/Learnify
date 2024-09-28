@@ -1,4 +1,6 @@
-import { AuthService } from "@/services/auth";
+"use client";
+
+import { onSignIn } from "@/actions/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -21,7 +23,7 @@ export const useAuthSignIn = () => {
   const router = useRouter();
 
   const onAuth = async (payload: { email: string; password: string }) => {
-    const { error } = await AuthService.SignIn(payload);
+    const { error } = await onSignIn(payload);
 
     if (!error) {
       reset();

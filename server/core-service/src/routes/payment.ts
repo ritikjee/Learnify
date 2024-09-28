@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import {
   onCreateNewGroupSubscription,
+  onGetActiveSubscription,
+  onGetGroupSubscriptionPaymentIntent,
   onGetStripeClientSecret,
   onTransferCommission
 } from '../controllers/payment';
@@ -15,5 +17,9 @@ paymentRouter.post(
   onCreateNewGroupSubscription
 );
 paymentRouter.post('/transfer-commission', onTransferCommission);
+paymentRouter.route('/onGetActiveSubscription').get(onGetActiveSubscription);
+paymentRouter
+  .route('/onGetGroupSubscriptionPaymentIntent')
+  .get(onGetGroupSubscriptionPaymentIntent);
 
 export default paymentRouter;

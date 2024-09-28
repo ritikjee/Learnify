@@ -2,22 +2,14 @@
 
 import config from "@/config";
 import { fetcher } from "@/lib/fetcher";
-import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const onGetAffiliateInfo = async (id: string) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/group/onGetAffiliateInfo`,
     params: {
       id,
-    },
-    headers: {
-      Cookie: cookieHeader,
     },
   });
 };
@@ -26,107 +18,85 @@ export const onCreateNewGroup = async (data: {
   name: string;
   category: string;
 }) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
   return await fetcher({
     method: "POST",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onCreateNewGroup`,
     data,
-    headers: {
-      Cookie: cookieHeader,
-    },
   });
 };
 
 export const onGetGroupInfo = async (groupid: string) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
-
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetGroupInfo`,
     params: {
       groupid, // Send groupid as a query parameter
     },
-    headers: {
-      Cookie: cookieHeader,
-    },
   });
 };
 
-export const onGetUserGroups = async () => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
+export const onGetUserGroups = async (): Promise<any> => {
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetUserGroups`,
-    headers: {
-      Cookie: cookieHeader,
-    },
   });
 };
 
 export const onGetGroupChannels = async (groupid: string) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetGroupChannels`,
     params: {
       groupid,
     },
-    headers: {
-      Cookie: cookieHeader,
-    },
   });
 };
 
 export const onGetGroupSubscriptions = async (groupid: string) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetGroupSubscriptions`,
     params: {
       groupid,
     },
-    headers: {
-      Cookie: cookieHeader,
-    },
   });
 };
 
 export const onGetAllGroupMembers = async (groupid: string) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
   return await fetcher({
     method: "GET",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetAllGroupMembers`,
     params: {
       groupid,
     },
-    headers: {
-      Cookie: cookieHeader,
+  });
+};
+
+export const onUpDateGroupSettings = async (
+  groupid: string,
+  type:
+    | "IMAGE"
+    | "ICON"
+    | "NAME"
+    | "DESCRIPTION"
+    | "JSONDESCRIPTION"
+    | "HTMLDESCRIPTION",
+  content: string,
+  path: string
+) => {
+  const { data, error } = await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onUpDateGroupSettings`,
+    data: {
+      groupid,
+      type,
+      content,
     },
   });
+
+  if (!error) revalidatePath(path);
+
+  return { data, error };
 };
 
 export const onSearchGroups = async (
@@ -134,11 +104,6 @@ export const onSearchGroups = async (
   query: string,
   paginate?: number
 ) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
   return await fetcher({
     method: "POST",
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onSearchGroups`,
@@ -147,8 +112,57 @@ export const onSearchGroups = async (
       mode,
       paginate,
     },
-    headers: {
-      Cookie: cookieHeader,
+  });
+};
+
+export const onGetExploreGroup = async (category: string, paginate: number) => {
+  return await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetExploreGroup`,
+    data: {
+      category,
+      paginate,
+    },
+  });
+};
+export const onGetPaginatedPosts = async (
+  identifier: string,
+  paginate: number
+) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetPaginatedPosts`,
+    params: {
+      identifier,
+      paginate,
+    },
+  });
+};
+
+export const onUpdateGroupGallery = async (
+  groupid: string,
+  content: string
+) => {
+  const { data, error } = await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onUpdateGroupGallery`,
+    data: {
+      groupid,
+      content,
+    },
+  });
+
+  if (!error) revalidatePath(`/group/${groupid}`);
+
+  return { data, error };
+};
+
+export const onJoinGroup = async (groupid: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onJoinGroup`,
+    params: {
+      groupid,
     },
   });
 };

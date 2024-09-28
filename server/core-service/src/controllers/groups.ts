@@ -367,3 +367,261 @@ export const onSearchGroups = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const onUpDateGroupSettings = async (req: Request, res: Response) => {
+  const { groupid, content, type } = req.body;
+  try {
+    if (type === 'IMAGE') {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          thumbnail: content
+        }
+      });
+    }
+    if (type === 'ICON') {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          icon: content
+        }
+      });
+      console.log('uploaded image');
+    }
+    if (type === 'DESCRIPTION') {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          description: content
+        }
+      });
+    }
+    if (type === 'NAME') {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          name: content
+        }
+      });
+    }
+    if (type === 'JSONDESCRIPTION') {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          jsonDescription: content
+        }
+      });
+    }
+    if (type === 'HTMLDESCRIPTION') {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          htmlDescription: content
+        }
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Update successful'
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: 'Error updating group'
+    });
+  }
+};
+
+export const onGetExploreGroup = async (req: Request, res: Response) => {
+  const { category, paginate } = req.body;
+  try {
+    const groups = await db.group.findMany({
+      where: {
+        category,
+        NOT: {
+          description: null,
+          thumbnail: null
+        }
+      },
+      take: 6,
+      skip: paginate
+    });
+
+    if (groups && groups.length > 0) {
+      return res.status(200).json({
+        groups
+      });
+    }
+
+    return res.status(400).json({
+      message: 'No group found'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'OOPS! Something went wrong'
+    });
+  }
+};
+
+export const onGetPaginatedPosts = async (req: Request, res: Response) => {
+  try {
+    const user = req.user;
+    const { identifier, paginate } = req.query as {
+      identifier: string;
+      paginate: string;
+    };
+    if (!identifier || !paginate) {
+      return res.status(400).json({
+        message: 'Bad Request'
+      });
+    }
+    const posts = await db.post.findMany({
+      where: {
+        channelId: identifier
+      },
+      skip: Number(paginate) || 0,
+      take: 2,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        channel: {
+          select: {
+            name: true
+          }
+        },
+        author: {
+          select: {
+            firstname: true,
+            lastname: true,
+            image: true
+          }
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true
+          }
+        },
+        likes: {
+          where: {
+            userId: user.id!
+          },
+          select: {
+            userId: true,
+            id: true
+          }
+        }
+      }
+    });
+
+    if (posts && posts.length > 0)
+      return res.status(200).json({
+        posts
+      });
+
+    return res.status(404).json({
+      message: 'No posts found'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const onUpdateGroupGallery = async (req: Request, res: Response) => {
+  const { groupid, content } = req.body;
+
+  if (!groupid || !content) {
+    return res.status(400).json({
+      message: 'Invalid request'
+    });
+  }
+  try {
+    const mediaLimit = await db.group.findUnique({
+      where: {
+        id: groupid
+      },
+      select: {
+        gallery: true
+      }
+    });
+
+    if (mediaLimit && mediaLimit?.gallery.length < 6) {
+      await db.group.update({
+        where: {
+          id: groupid
+        },
+        data: {
+          gallery: {
+            push: content
+          }
+        }
+      });
+
+      return res.status(200).json({
+        message: 'Media uploaded successfully'
+      });
+    }
+
+    return res.status(400).json({
+      message: 'Looks like your gallery has the maximum media allowed'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const onJoinGroup = async (req: Request, res: Response) => {
+  const { groupid } = req.query as {
+    groupid: string;
+  };
+
+  if (!groupid) {
+    return res.status(400).json({
+      message: 'Bad Request'
+    });
+  }
+
+  try {
+    const user = req.user;
+    const member = await db.group.update({
+      where: {
+        id: groupid
+      },
+      data: {
+        member: {
+          create: {
+            userId: user.id
+          }
+        }
+      }
+    });
+    if (member) {
+      return res.status(200).json({
+        message: 'You have joined this group'
+      });
+    }
+    return res.status(400).json({
+      message: 'Error joining group'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};

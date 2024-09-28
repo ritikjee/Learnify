@@ -77,3 +77,81 @@ export const onTransferCommission = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const onGetActiveSubscription = async (req: Request, res: Response) => {
+  const { groupId } = req.query as {
+    groupId: string;
+  };
+
+  if (!groupId) {
+    return res.status(400).json({ message: 'Bad request' });
+  }
+  try {
+    const subscription = await db.subscription.findFirst({
+      where: {
+        groupId: groupId,
+        active: true
+      }
+    });
+
+    if (subscription) {
+      return res.status(200).json({ subscription });
+    }
+    res.status(404).json({ message: 'Subscription not found' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+export const onGetGroupSubscriptionPaymentIntent = async (
+  req: Request,
+  res: Response
+) => {
+  const groupid = req.query.groupid as string;
+
+  if (!groupid) {
+    return res.status(400).json({ message: 'Bad request' });
+  }
+
+  try {
+    const price = await db.subscription.findFirst({
+      where: {
+        groupId: groupid,
+        active: true
+      },
+      select: {
+        price: true,
+        Group: {
+          select: {
+            User: {
+              select: {
+                stripeId: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (price && price.price) {
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount: price.price * 100,
+        automatic_payment_methods: {
+          enabled: true
+        }
+      });
+
+      if (paymentIntent) {
+        return res.status(200).json({ secret: paymentIntent.client_secret });
+      }
+
+      return res
+        .status(400)
+        .json({ message: 'Failed to create payment intent' });
+    }
+    return res.status(404).json({ message: 'Subscription not found' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+};
