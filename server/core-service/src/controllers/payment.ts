@@ -232,3 +232,24 @@ export const onActivateSubscription = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const onGetStripeIntegration = async (req: Request, res: Response) => {
+  try {
+    const user = req.user;
+    const stripeId = await db.user.findUnique({
+      where: {
+        id: user.id
+      },
+      select: {
+        stripeId: true
+      }
+    });
+
+    if (stripeId) {
+      return res.status(200).json({ stripeId: stripeId.stripeId });
+    }
+    return res.status(404).json({ message: 'Stripe account not found' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+};

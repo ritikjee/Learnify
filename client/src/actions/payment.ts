@@ -63,3 +63,10 @@ export const onActivateSubscription = async (groupid: string) => {
     },
   });
 };
+
+export const onGetStripeIntegration = async () => {
+  return await fetcher({
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/payment/onGetStripeIntegration`,
+    method: "GET",
+  });
+};

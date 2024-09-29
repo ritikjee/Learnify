@@ -624,3 +624,65 @@ export const onJoinGroup = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const onGetAffiliateLink = async (req: Request, res: Response) => {
+  const { groupid } = req.query as { groupid: string };
+  if (!groupid) {
+    return res.status(400).json({
+      message: 'Invalid request'
+    });
+  }
+  try {
+    const affiliate = await db.affiliate.findUnique({
+      where: {
+        groupId: groupid
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if (affiliate)
+      return res.status(200).json({
+        affiliate
+      });
+
+    return res.status(400).json({
+      message: 'No affiliate link found'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const onVerifyAffilateLink = async (req: Request, res: Response) => {
+  const { id } = req.query as { id: string };
+  if (!id) {
+    return res.status(400).json({
+      message: 'Invalid request'
+    });
+  }
+  try {
+    const link = await db.affiliate.findUnique({
+      where: {
+        id
+      }
+    });
+
+    if (link) {
+      return res.status(200).json({
+        message: 'Affiliate link verified'
+      });
+    }
+
+    return res.status(400).json({
+      message: 'Invalid affiliate link'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};

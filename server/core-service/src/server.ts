@@ -7,6 +7,7 @@ import groupRouter from './routes/group';
 import paymentRouter from './routes/payment';
 import channelRouter from './routes/channel';
 import courseRouter from './routes/courses';
+import integrationsRouter from './routes/integration';
 
 const app: Express = express();
 
@@ -30,6 +31,7 @@ app.use('/api/group', groupRouter);
 app.use('/api/payment', paymentRouter);
 app.use('/api/channel', channelRouter);
 app.use('/api/course', courseRouter);
+app.use('/api/integration', integrationsRouter);
 
 app.all('*', (req: Request, res: Response) => {
   res.status(404).json({ message: 'No resource found' });

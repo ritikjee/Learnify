@@ -37,7 +37,7 @@ export const SimpleModal = ({
                 <Image
                   src={`https://ucarecdn.com/2c9bd4ab-1f00-41df-bad2-df668f65a232/`}
                   fill
-                  alt="Corinna"
+                  alt="Learnify"
                 />
               </div>
               <div className="text-gray-400">
@@ -47,7 +47,8 @@ export const SimpleModal = ({
               <div className="w-12 h-12 relative">
                 <Image
                   src={
-                    logo ||
+                    // logo ||
+                    // WIP : Fix this
                     "https://ucarecdn.com/2c9bd4ab-1f00-41df-bad2-df668f65a232/"
                   }
                   fill

@@ -16,6 +16,7 @@ import {
 } from "@/actions/payment";
 import { CreateGroupSchema } from "@/components/forms/create-group/schema";
 import { CreateGroupSubscriptionSchema } from "@/components/forms/subscription/schema";
+import config from "@/config";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripeCardElement, loadStripe } from "@stripe/stripe-js";
@@ -250,4 +251,27 @@ export const useAllSubscriptions = (groupid: string) => {
   });
 
   return { data, mutate };
+};
+
+export const useStripeConnect = (groupid: string) => {
+  const [onStripeAccountPending, setOnStripeAccountPending] =
+    useState<boolean>(false);
+
+  const onStripeConnect = async () => {
+    try {
+      setOnStripeAccountPending(true);
+      const account = await axios.get(
+        `${config.BACKEND_URL.CORE_SERVICE}/api/integration/stripe?groupid=${groupid}`
+      );
+      if (account) {
+        setOnStripeAccountPending(false);
+        if (account) {
+          window.location.href = account.data.url;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return { onStripeConnect, onStripeAccountPending };
 };

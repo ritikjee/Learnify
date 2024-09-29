@@ -10,7 +10,10 @@ const GroupCreatePage = async ({
 }: {
   searchParams: { [affiliate: string]: string };
 }) => {
-  const { data: affiliate } = await onGetAffiliateInfo(searchParams.affiliate);
+  const { data: affiliate, error } = await onGetAffiliateInfo(
+    searchParams.affiliate
+  );
+
   const { data: user } = await onAuthenticatedUser();
   if (!user) {
     return redirect("/sign-in");
@@ -30,15 +33,14 @@ const GroupCreatePage = async ({
             You were referred by
             <Avatar>
               <AvatarImage
-                src={affiliate.user?.Group?.User.image as string}
+                src={affiliate?.Group?.User.image as string}
                 alt="User"
               />
               <AvatarFallback>
                 <User />
               </AvatarFallback>
             </Avatar>
-            {affiliate.user?.Group?.User.firstname}{" "}
-            {affiliate.user?.Group?.User.lastname}
+            {affiliate?.Group?.User.firstname} {affiliate?.Group?.User.lastname}
           </div>
         )}
       </div>

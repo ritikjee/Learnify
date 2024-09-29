@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 export const onGetAffiliateInfo = async (id: string) => {
   return await fetcher({
     method: "GET",
-    url: `${config.BACKEND_URL.CORE_SERVICE}/group/onGetAffiliateInfo`,
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetAffiliateInfo`,
     params: {
       id,
     },
@@ -163,6 +163,26 @@ export const onJoinGroup = async (groupid: string) => {
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onJoinGroup`,
     params: {
       groupid,
+    },
+  });
+};
+
+export const onGetAffiliateLink = async (groupid: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetAffiliateLink`,
+    params: {
+      groupid,
+    },
+  });
+};
+
+export const onVerifyAffilateLink = async (id: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onVerifyAffilateLink`,
+    params: {
+      id,
     },
   });
 };

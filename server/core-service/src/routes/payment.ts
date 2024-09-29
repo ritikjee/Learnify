@@ -5,6 +5,7 @@ import {
   onGetActiveSubscription,
   onGetGroupSubscriptionPaymentIntent,
   onGetStripeClientSecret,
+  onGetStripeIntegration,
   onTransferCommission
 } from '../controllers/payment';
 import protect from '../middleware/auth-middleware';
@@ -23,5 +24,8 @@ paymentRouter
   .route('/onGetGroupSubscriptionPaymentIntent')
   .get(onGetGroupSubscriptionPaymentIntent);
 paymentRouter.route('/onActivateSubscription').get(onActivateSubscription);
+paymentRouter
+  .route('/onGetStripeIntegration')
+  .get(protect, onGetStripeIntegration);
 
 export default paymentRouter;

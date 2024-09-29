@@ -65,6 +65,7 @@ const BlockTextEditor = ({
   const [characters, setCharacters] = useState<number | undefined>(
     textContent?.length || undefined
   );
+  // WIP : Fix height issue
   return (
     <div>
       {htmlContent && !onEdit && inline ? (

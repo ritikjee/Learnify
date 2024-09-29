@@ -3,6 +3,7 @@ import protect from '../middleware/auth-middleware';
 import {
   onCreateNewGroup,
   onGetAffiliateInfo,
+  onGetAffiliateLink,
   onGetAllGroupMembers,
   onGetExploreGroup,
   onGetGroupChannels,
@@ -13,7 +14,8 @@ import {
   onJoinGroup,
   onSearchGroups,
   onUpdateGroupGallery,
-  onUpDateGroupSettings
+  onUpDateGroupSettings,
+  onVerifyAffilateLink
 } from '../controllers/groups';
 
 const groupRouter = Router();
@@ -31,5 +33,7 @@ groupRouter.route('/onGetExploreGroup').post(onGetExploreGroup);
 groupRouter.route('/onGetPaginatedPosts').get(onGetPaginatedPosts);
 groupRouter.route('/onUpdateGroupGallery').post(protect, onUpdateGroupGallery);
 groupRouter.route('/onJoinGroup').get(protect, onJoinGroup);
+groupRouter.route('/onGetAffiliateLink').get(onGetAffiliateLink);
+groupRouter.route('/onVerifyAffilateLink').get(onVerifyAffilateLink);
 
 export default groupRouter;
