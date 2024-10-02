@@ -1,7 +1,7 @@
 {
   "BACKEND_URL": {
-    "AUTH_SERVICE": "",
-    "CORE_SERVICE": ""
+    "AUTH_SERVICE": "https://learnify-dr3k.onrender.com",
+    "CORE_SERVICE": "https://learnify-1-mir3.onrender.com"
   },
   "FRONTEND_URL": {
     "APP_URL": ""

@@ -2,11 +2,13 @@ import { onAuthenticatedUser, onSignInUser } from "@/actions/auth";
 import { redirect } from "next/navigation";
 
 const CompleteSigIn = async () => {
-  const { data: user } = await onAuthenticatedUser();
+  const { data: user, error: test } = await onAuthenticatedUser();
 
   if (!user) return redirect("/sign-in");
 
   const { data: authenticated, error } = await onSignInUser();
+
+  console.log(error);
 
   if (error) {
     redirect("/sign-in");

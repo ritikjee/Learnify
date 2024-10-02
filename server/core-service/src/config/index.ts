@@ -1,5 +1,5 @@
-import developmentConfig from "./development.json";
-import productionConfig from "./production.json";
+import developmentConfig from './development.json';
+import productionConfig from './production.json';
 
 interface Config {
   BACKEND_URL: {
@@ -13,11 +13,11 @@ interface Config {
 
 let config: Config;
 
-switch (process.env.NEXT_PUBLIC_APP_MODE as string) {
-  case "production":
+switch (process.env.APP_MODE as string) {
+  case 'production':
     config = productionConfig;
     break;
-  case "development":
+  case 'development':
     config = developmentConfig;
     break;
   default:

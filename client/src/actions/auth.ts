@@ -35,8 +35,6 @@ export const onSignUp = async (data: { email: string; password: string }) => {
 };
 
 export const onAuthenticatedUser = async () => {
-  const cookieStore = cookies();
-
   return await fetcher({
     url: `${config.BACKEND_URL.AUTH_SERVICE}/api/auth/me`,
     method: "GET",

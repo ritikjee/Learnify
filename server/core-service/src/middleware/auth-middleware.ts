@@ -12,6 +12,8 @@ export default async function protect(
   try {
     const cookies = req.cookies;
 
+    console.log(cookies);
+
     const { data } = await axios.get(`${AUTH_SERVICE}/api/auth/me`, {
       headers: {
         Cookie: Object.entries(cookies)
