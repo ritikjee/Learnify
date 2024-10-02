@@ -13,7 +13,7 @@ interface Config {
 
 let config: Config;
 
-switch (process.env.APP_MODE as string) {
+switch (process.env.NEXT_PUBLIC_APP_MODE as string) {
   case "production":
     config = productionConfig;
     break;
