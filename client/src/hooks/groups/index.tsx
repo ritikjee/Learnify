@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  isSubscribed,
+  onGetAllGroupMembers,
   onGetExploreGroup,
   onGetGroupInfo,
   onSearchGroups,
@@ -16,7 +18,7 @@ import {
 import { AppDispatch } from "@/redux/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -294,6 +296,7 @@ export const useExploreSlider = (query: string, paginate: number) => {
     return () => {
       onLoadSlider;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { refetch, isFetching, data, onLoadSlider };
@@ -301,23 +304,21 @@ export const useExploreSlider = (query: string, paginate: number) => {
 
 export const useGroupInfo = () => {
   // WIP : Remove authentication
-  const { data } = useQuery<{ data: any; error: any }>({
+  const { data, error } = useQuery<{ data: any; error: any }>({
     queryKey: ["about-group-info"],
   });
 
-  const router = useRouter();
-
-  if (data?.error) router.push("/explore");
-
-  const { data: group, error } = data as {
+  const { data: isSubscribed } = useQuery<{
     data: any;
     error: any;
-  };
-
-  if (error) router.push("/explore");
+  }>({
+    queryKey: ["isSubscribed"],
+  });
 
   return {
-    group: group?.group,
+    group: data?.data?.group,
+    groupOwner: data?.data?.groupOwner,
+    subscribed: isSubscribed?.data?.subscribed,
   };
 };
 
@@ -543,4 +544,15 @@ export const useMediaGallery = (groupid: string) => {
     onUpdateGallery,
     isPending,
   };
+};
+
+export const useGroupChat = (groupid: string) => {
+  const { data } = useQuery({
+    queryKey: ["member-chats"],
+    queryFn: () => onGetAllGroupMembers(groupid),
+  });
+
+  const pathname = usePathname();
+
+  return { data, pathname };
 };

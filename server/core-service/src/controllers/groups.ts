@@ -137,7 +137,7 @@ export const onGetGroupInfo = async (req: Request, res: Response) => {
     if (group)
       return res.status(200).json({
         group,
-        groupOwner: user.id === group.userId ? true : false
+        groupOwner: user?.id === group.userId ? true : false
       });
 
     return res.status(400).json({
@@ -679,6 +679,182 @@ export const onVerifyAffilateLink = async (req: Request, res: Response) => {
 
     return res.status(400).json({
       message: 'Invalid affiliate link'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const isSubscribed = async (req: Request, res: Response) => {
+  const { groupid } = req.query as {
+    groupid: string;
+  };
+
+  if (!groupid) {
+    return res.status(400).json({
+      message: 'Please provide a valid groupid'
+    });
+  }
+
+  const user = req.user;
+  try {
+    const userInfo = await db.group.findFirst({
+      where: {
+        id: groupid
+      },
+      include: {
+        member: true
+      }
+    });
+    const subscription = userInfo?.member.map((mem) => mem.id == user.id);
+    if (subscription) {
+      return res.status(200).json({
+        subscribed: true,
+        message: 'User is subscribed to the group'
+      });
+    } else {
+      return res.status(200).json({
+        subscribed: false,
+        message: 'User is not subscribed to the group'
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const onGetPostInfo = async (req: Request, res: Response) => {
+  const { postid } = req.query as { postid: string };
+
+  if (!postid) {
+    return res.status(400).json({
+      message: 'Invalid request'
+    });
+  }
+  try {
+    const user = req.user;
+    const post = await db.post.findUnique({
+      where: {
+        id: postid
+      },
+      include: {
+        channel: {
+          select: {
+            name: true
+          }
+        },
+        author: {
+          select: {
+            firstname: true,
+            lastname: true,
+            image: true
+          }
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true
+          }
+        },
+        likes: {
+          where: {
+            userId: user.id!
+          },
+          select: {
+            userId: true,
+            id: true
+          }
+        },
+        comments: true
+      }
+    });
+
+    if (post) return res.status(200).json({ post });
+
+    return res.status(404).json({
+      message: 'Post not found'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const onGetPostComments = async (req: Request, res: Response) => {
+  const { postid } = req.query as { postid: string };
+  if (!postid) {
+    return res.status(400).json({
+      message: 'Invalid request'
+    });
+  }
+  try {
+    const comments = await db.comment.findMany({
+      where: {
+        postId: postid,
+        replied: false
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        user: true,
+        _count: {
+          select: {
+            reply: true
+          }
+        }
+      }
+    });
+
+    if (comments && comments.length > 0) {
+      return res.status(200).json({
+        comments
+      });
+    }
+    return res.status(404).json({
+      message: 'No comments found'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error'
+    });
+  }
+};
+
+export const onGetCommentReplies = async (req: Request, res: Response) => {
+  const { commentid } = req.query as { commentid: string };
+  if (!commentid) {
+    return res.status(400).json({
+      message: 'Invalid request'
+    });
+  }
+  try {
+    const replies = await db.comment.findUnique({
+      where: {
+        id: commentid
+      },
+      select: {
+        reply: {
+          include: {
+            user: true
+          }
+        }
+      }
+    });
+
+    if (replies && replies.reply.length > 0) {
+      return res.status(200).json({
+        replies
+      });
+    }
+
+    return res.status(404).json({
+      message: 'No replies found'
     });
   } catch (error) {
     return res.status(500).json({

@@ -3,6 +3,7 @@
 import {
   onCreateNewGroup,
   onGetGroupChannels,
+  onGetGroupInfo,
   onGetGroupSubscriptions,
   onJoinGroup,
 } from "@/actions/groups";
@@ -143,6 +144,19 @@ export const useJoinFree = (groupid: string) => {
   };
 
   return { onJoinFreeGroup };
+};
+
+export const useVisitGroup = (groupid: string) => {
+  const router = useRouter();
+  const onVisitGroup = async () => {
+    const { error } = await onGetGroupInfo(groupid);
+    if (!error) {
+      const { data: channels } = await onGetGroupChannels(groupid);
+      router.push(`/group/${groupid}/channel/${channels?.channels?.[0].id}`);
+    }
+  };
+
+  return { onVisitGroup };
 };
 
 export const useJoinGroup = (groupid: string) => {

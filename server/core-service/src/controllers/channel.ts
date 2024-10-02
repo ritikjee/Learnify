@@ -266,3 +266,66 @@ export const onLikeChannelPost = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const onCreateNewComment = async (req: Request, res: Response) => {
+  const { postid, content, commentid } = req.body;
+  if (!postid || !content || !commentid) {
+    return res.status(400).json({ message: 'Invalid Input' });
+  }
+  try {
+    const user = req.user;
+    const comment = await db.post.update({
+      where: {
+        id: postid
+      },
+      data: {
+        comments: {
+          create: {
+            id: commentid,
+            content,
+            userId: user.id!
+          }
+        }
+      }
+    });
+    if (comment) {
+      return res.status(200).json({ message: 'Comment posted' });
+    }
+    return res.status(400).json({ message: 'Something went wrong' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const onCreateCommentReply = async (req: Request, res: Response) => {
+  const { postid, commentid, replyid, comment } = req.body;
+  if (!postid || !commentid || !replyid || !comment) {
+    return res.status(400).json({ message: 'Invalid Input' });
+  }
+  try {
+    const user = req.user;
+    const reply = await db.comment.update({
+      where: {
+        id: commentid
+      },
+      data: {
+        reply: {
+          create: {
+            content: comment,
+            id: replyid,
+            postId: postid,
+            userId: user.id!,
+            replied: true
+          }
+        }
+      }
+    });
+
+    if (reply) {
+      return res.status(200).json({ message: 'Reply posted' });
+    }
+    return res.status(400).json({ message: 'Something went wrong' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

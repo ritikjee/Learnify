@@ -14,6 +14,15 @@ export const onGetAffiliateInfo = async (id: string) => {
   });
 };
 
+export const isSubscribed = async (groupid: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/isSubscribed`,
+    params: {
+      groupid,
+    },
+  });
+};
 export const onCreateNewGroup = async (data: {
   name: string;
   category: string;
@@ -183,6 +192,36 @@ export const onVerifyAffilateLink = async (id: string) => {
     url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onVerifyAffilateLink`,
     params: {
       id,
+    },
+  });
+};
+
+export const onGetPostInfo = async (postid: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetPostInfo`,
+    params: {
+      postid,
+    },
+  });
+};
+
+export const onGetPostComments = async (postid: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetPostComments`,
+    params: {
+      postid,
+    },
+  });
+};
+
+export const onGetCommentReplies = async (commentid: string) => {
+  return await fetcher({
+    method: "GET",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/group/onGetCommentReplies`,
+    params: {
+      commentid,
     },
   });
 };

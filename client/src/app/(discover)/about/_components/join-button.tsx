@@ -2,16 +2,48 @@ import { GlassModal } from "@/components/global/glass-modal";
 import { JoinGroupPaymentForm } from "@/components/global/join-group";
 import { StripeElements } from "@/components/global/stripe/element";
 import { Button } from "@/components/ui/button";
-import { useActiveGroupSubscription, useJoinFree } from "@/hooks/payment";
+import {
+  useActiveGroupSubscription,
+  useJoinFree,
+  useVisitGroup,
+} from "@/hooks/payment";
+import { useRouter } from "next/navigation";
 
 type JoinButtonProps = {
   owner: boolean;
   groupid: string;
+  isSubscribed: boolean;
+  user: boolean;
 };
 
-export const JoinButton = ({ owner, groupid }: JoinButtonProps) => {
+export const JoinButton = ({
+  owner,
+  groupid,
+  isSubscribed,
+  user,
+}: JoinButtonProps) => {
   const { data } = useActiveGroupSubscription(groupid);
   const { onJoinFreeGroup } = useJoinFree(groupid);
+  const { onVisitGroup } = useVisitGroup(groupid);
+
+  const router = useRouter();
+  if (!user)
+    return (
+      <Button
+        onClick={() => router.push("/sign-in")}
+        className="w-full p-10"
+        variant="ghost"
+      >
+        Login in to join group
+      </Button>
+    );
+
+  if (isSubscribed && !owner)
+    return (
+      <Button onClick={onVisitGroup} className="w-full p-10" variant="ghost">
+        Go to Group
+      </Button>
+    );
 
   if (!owner) {
     if (data?.data) {

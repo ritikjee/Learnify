@@ -30,7 +30,7 @@ export const useAuthSignIn = () => {
       toast("Success", {
         description: "Welcome back!",
       });
-      router.push("/callback/sign-in");
+      router.push("/explore");
     } else {
       toast("Error", {
         description: error?.message || "email/password is incorrect try again",

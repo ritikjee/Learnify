@@ -13,7 +13,7 @@ type Props = {
 };
 
 const GroupSideWidget = ({ groupid, light, userid }: Props) => {
-  const { group } = useGroupInfo();
+  const { group, groupOwner, subscribed } = useGroupInfo();
 
   return (
     <Card
@@ -42,7 +42,9 @@ const GroupSideWidget = ({ groupid, light, userid }: Props) => {
       {groupid && (
         <JoinButton
           groupid={groupid}
-          owner={group?.userId === userid ? true : false}
+          owner={groupOwner}
+          isSubscribed={subscribed}
+          user={userid ? true : false}
         />
       )}
     </Card>

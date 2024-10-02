@@ -1,9 +1,13 @@
 import { onAuthenticatedUser } from "@/actions/auth";
 import SignInForm from "@/components/forms/sign-in";
 import { Separator } from "@/components/ui/separator";
+import { redirect } from "next/navigation";
 
 const SignInPage = async () => {
   const { error } = await onAuthenticatedUser();
+
+  if (!error) redirect("/explore");
+  // WIP : Set up oAuth
 
   return (
     <>
@@ -19,7 +23,6 @@ const SignInPage = async () => {
         </div>
         <Separator orientation="horizontal" className="bg-themeGray" />
       </div>
-      {/* <GoogleAuthButton method="signin" /> */}
     </>
   );
 };

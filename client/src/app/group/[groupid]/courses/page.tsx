@@ -21,6 +21,8 @@ const CoursesPage = async ({ params }: Props) => {
     queryFn: () => onGetGroupCourses(params.groupid),
   });
 
+  // WIP : Check for already subscribed
+
   return (
     <HydrationBoundary state={dehydrate(client)}>
       <div className="container grid lg:grid-cols-2 2xl:grid-cols-3 py-10 gap-5">

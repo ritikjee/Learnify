@@ -1,5 +1,5 @@
 import { onAuthenticatedUser } from "@/actions/auth";
-import { onGetGroupInfo } from "@/actions/groups";
+import { isSubscribed, onGetGroupInfo } from "@/actions/groups";
 import { onGetActiveSubscription } from "@/actions/payment";
 
 import {
@@ -29,6 +29,11 @@ const Page = async ({ params }: Props) => {
     queryFn: () => onGetActiveSubscription(params.groupid),
   });
 
+  await query.prefetchQuery({
+    queryKey: ["isSubscribed"],
+    queryFn: () => isSubscribed(params.groupid),
+  });
+
   const { data: userid } = await onAuthenticatedUser();
 
   return (
@@ -38,7 +43,7 @@ const Page = async ({ params }: Props) => {
           <AboutGroup groupid={params.groupid} userid={userid?.id} />
         </div>
         <div className="col-span-1 relative">
-          <GroupSideWidget groupid={params.groupid} />
+          <GroupSideWidget groupid={params.groupid} userid={userid?.id} />
         </div>
       </div>
     </HydrationBoundary>

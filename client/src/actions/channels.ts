@@ -88,3 +88,37 @@ export const onLikeChannelPost = async (postid: string, likeid: string) => {
     },
   });
 };
+
+export const onCreateNewComment = async (
+  postid: string,
+  content: string,
+  commentid: string
+) => {
+  return await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/channel/onCreateNewComment`,
+    data: {
+      postid,
+      content,
+      commentid,
+    },
+  });
+};
+
+export const onCreateCommentReply = async (
+  postid: string,
+  commentid: string,
+  comment: string,
+  replyid: string
+) => {
+  return await fetcher({
+    method: "POST",
+    url: `${config.BACKEND_URL.CORE_SERVICE}/api/channel/onCreateCommentReply`,
+    data: {
+      postid,
+      commentid,
+      comment,
+      replyid,
+    },
+  });
+};

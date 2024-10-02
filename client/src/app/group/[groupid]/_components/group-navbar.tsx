@@ -15,7 +15,11 @@ const Menu = ({ orientation }: MenuProps) => {
   switch (orientation) {
     case "desktop":
       return (
-        <Card className="bg-themeGray border-themeGray bg-clip-padding backdrop--blur__safari backdrop-filter backdrop-blur-2xl bg-opacity-60 p-1 lg:flex  md:rounded-xl flex items-center justify-center w-fit">
+        <Card
+          className={
+            "bg-themeGray border-themeGray bg-clip-padding backdrop--blur__safari backdrop-filter backdrop-blur-2xl bg-opacity-60 p-1 lg:flex  md:rounded-xl flex items-center justify-center w-full "
+          }
+        >
           <CardContent className="p-0 flex gap-2">
             {GROUPLE_CONSTANTS.groupPageMenu.map((menuItem) => (
               <Link
@@ -39,7 +43,7 @@ const Menu = ({ orientation }: MenuProps) => {
 
     case "mobile":
       return (
-        <div className="flex flex-col mt-10">
+        <div className={"flex flex-col mt-10 "}>
           {GROUPLE_CONSTANTS.groupPageMenu.map((menuItem) => (
             <Link
               href={menuItem.path}

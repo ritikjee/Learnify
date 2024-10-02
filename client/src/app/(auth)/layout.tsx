@@ -11,7 +11,7 @@ type Props = {
 export default async function AuthLayout({ children }: Props) {
   const { data, error } = await onAuthenticatedUser();
 
-  if (!error) redirect("/callback/sign-in");
+  if (!error) redirect("/explore");
   return (
     <div className="container h-screen flex justify-center items-center">
       <div className="flex flex-col w-full items-center py-24">
