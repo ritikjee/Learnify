@@ -7,16 +7,16 @@ import { router as userRouter } from './routes/token';
 
 const app: Express = express();
 
+const PORT = Number(process.env.PORT || 5050);
+
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     credentials: true
   })
 );
 app.use(express.json());
 app.use(cookieParser());
-
-const PORT = process.env.PORT || 5000;
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Hello from auth service' });
@@ -29,6 +29,4 @@ app.all('*', (req: Request, res: Response) => {
   res.status(404).json({ message: 'No resource found' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log('Running on port ' + PORT));

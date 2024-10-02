@@ -1,7 +1,7 @@
 {
   "BACKEND_URL": {
-    "AUTH_SERVICE": "",
-    "CORE_SERVICE": ""
+    "AUTH_SERVICE": "https://learnify-ei90.onrender.com",
+    "CORE_SERVICE": "https://learnify-1-gdfs.onrender.com"
   },
   "FRONTEND_URL": {
     "APP_URL": ""

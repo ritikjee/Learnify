@@ -1,4 +1,6 @@
 node_modules
-.env
-package-lock.json
 dist
+.env
+.serverless
+.netlify
+package-lock.json
