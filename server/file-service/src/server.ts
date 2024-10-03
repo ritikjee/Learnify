@@ -2,9 +2,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import 'dotenv/config';
 import express, { Express, Request, Response } from 'express';
-import authMiddleware from './middleware/auth-middleware';
-import secretMiddleware from './middleware/secret-middleware';
 import { router } from '.';
+import authMiddleware from './middleware/auth-middleware';
 
 const app: Express = express();
 
@@ -19,13 +18,13 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/', (req: Request, res: Response) => {
+app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     message: 'Hello from file service'
   });
 });
 
-app.use('/api', authMiddleware, secretMiddleware, router);
+app.all('/api', authMiddleware, router);
 
 app.all('*', (req: Request, res: Response) => {
   res.status(404).json({ message: 'Route not found' });
