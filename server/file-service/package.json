@@ -1,35 +1,39 @@
 {
-  "name": "core-service",
+  "name": "file-service",
   "version": "1.0.0",
-  "description": "This is backend-core service for my app",
+  "description": "This is file-service for uploading and transcoding video files for lms",
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon",
     "build": "npm i && npx tsc",
     "start": "node dist/server.js"
   },
+  "keywords": [
+    "mern",
+    "aws",
+    "s3"
+  ],
   "author": "Ritik Jha",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.19.1",
-    "@stripe/react-stripe-js": "^2.8.0",
-    "@stripe/stripe-js": "^4.4.0",
+    "@aws-sdk/client-s3": "^3.662.0",
+    "@aws-sdk/s3-request-presigner": "^3.662.0",
     "axios": "^1.7.7",
-    "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "stripe": "^16.10.0",
+    "mime-types": "^2.1.35",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/mime-types": "^2.1.4",
     "@types/uuid": "^10.0.0",
-    "prisma": "^5.19.1",
+    "cors": "^2.8.5",
+    "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }

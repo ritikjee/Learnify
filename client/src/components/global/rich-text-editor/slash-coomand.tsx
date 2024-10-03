@@ -1,3 +1,4 @@
+import { uploadFile } from "@/actions/upload";
 import {
   CheckSquare,
   Code,
@@ -141,13 +142,14 @@ export const suggestionItems = createSuggestionItems([
     icon: <ImageIcon size={18} />,
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).run();
-      // upload image
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
       input.onchange = async () => {
         if (input.files?.length) {
-          // WIP : set up aws s3 bucket
+          const { data } = await uploadFile(input.files[0].name);
+          try {
+          } catch (error) {}
         }
       };
       input.click();

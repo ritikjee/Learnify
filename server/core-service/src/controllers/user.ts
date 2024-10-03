@@ -4,6 +4,7 @@ import { db } from '../utils/db';
 export async function loggedInUser(req: Request, res: Response) {
   try {
     const { id } = req.user;
+
     const loggedInUser = await db.user.findUnique({
       where: {
         id

@@ -303,7 +303,6 @@ export const useExploreSlider = (query: string, paginate: number) => {
 };
 
 export const useGroupInfo = () => {
-  // WIP : Remove authentication
   const { data, error } = useQuery<{ data: any; error: any }>({
     queryKey: ["about-group-info"],
   });
