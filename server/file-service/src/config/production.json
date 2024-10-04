@@ -2,7 +2,7 @@
   "BACKEND_URL": {
     "AUTH_SERVICE": "https://learnify-dr3k.onrender.com",
     "CORE_SERVICE": "https://learnify-1-mir3.onrender.com",
-    "FILE_SERVICE": ""
+    "FILE_SERVICE": "https://learnify-2.onrender.com"
   },
   "FRONTEND_URL": {
     "APP_URL": "https://learnify-sooty.vercel.app"
